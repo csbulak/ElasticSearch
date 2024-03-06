@@ -1,15 +1,15 @@
 using System.Collections.Immutable;
+using Elastic.Clients.Elasticsearch;
 using ElasticSearch.API.Dtos;
 using ElasticSearch.API.Models;
-using Nest;
 
 namespace ElasticSearch.API.Repository;
 
 public class ProductRepository
 {
-    private readonly IElasticClient _client;
+    private readonly ElasticsearchClient _client;
 
-    public ProductRepository(IElasticClient client)
+    public ProductRepository(ElasticsearchClient client)
     {
         _client = client;
     }
@@ -19,7 +19,7 @@ public class ProductRepository
         product.Created = DateTime.Now;
 
         var response = await _client.IndexAsync(product, x => x.Index("products").Id(Guid.NewGuid().ToString()));
-        if (!response.IsValid)
+        if (!response.IsSuccess())
         {
             return null;
         }
@@ -50,14 +50,14 @@ public class ProductRepository
 
     public async Task<bool> UpdateAsync(ProductUpdateDto product)
     {
-        var response = await _client.UpdateAsync<Product, ProductUpdateDto>(product.Id, x => x.Index("products")
-            .Doc(product));
-        return response.IsValid;
+        var response =
+            await _client.UpdateAsync<Product, ProductUpdateDto>("products", product.Id, x => x.Doc(product));
+        return response.IsSuccess();
     }
 
     public async Task<bool> DeleteAsync(string id)
     {
         var response = await _client.DeleteAsync<Product>(id, x => x.Index("products"));
-        return response.IsValid;
+        return response.IsSuccess();
     }
 }

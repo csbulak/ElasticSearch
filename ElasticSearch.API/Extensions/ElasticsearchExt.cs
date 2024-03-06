@@ -1,5 +1,5 @@
-using Elasticsearch.Net;
-using Nest;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 
 namespace ElasticSearch.API.Extensions;
 
@@ -7,11 +7,12 @@ public static class ElasticsearchExt
 {
     public static void AddElastic(this IServiceCollection services, IConfiguration configuration)
     {
-        var pool = new SingleNodeConnectionPool(new Uri(configuration.GetSection("Elastic")["Url"] ??
-                                                        string.Empty));
+        var username = configuration.GetSection("Elastic")["Username"] ?? string.Empty;
+        var password = configuration.GetSection("Elastic")["Password"] ?? string.Empty;
+        var settings = new ElasticsearchClientSettings(new Uri(configuration.GetSection("Elastic")["Url"] ??
+                                                               string.Empty))
+            .Authentication(new BasicAuthentication(username, password));
 
-        var settings = new ConnectionSettings(pool);
-        var client = new ElasticClient(settings);
-        services.AddSingleton<IElasticClient>(client);
+        var client = new ElasticsearchClient(settings);
     }
 }
