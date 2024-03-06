@@ -25,4 +25,11 @@ public class ProductService
 
         return ResponseDto<ProductDto>.Success(response.CreateDto(), HttpStatusCode.Created);
     }
+
+    public async Task<ResponseDto<List<ProductDto>>> GetAllAsync()
+    {
+        var result = await _productRepository.GetAllAsync();
+        var productListDto = result.Select(p => p.CreateDto()).ToList();
+        return ResponseDto<List<ProductDto>>.Success(productListDto, HttpStatusCode.OK);
+    }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using ElasticSearch.API.Models;
 using Nest;
 
@@ -24,5 +25,18 @@ public class ProductRepository
 
         product.Id = response.Id;
         return product;
+    }
+
+    public async Task<ImmutableList<Product>> GetAllAsync()
+    {
+        var searchResponse = await _client.SearchAsync<Product>(s => s.Index("products")
+            .Query(q => q.MatchAll()));
+
+        foreach (var hits in searchResponse.Hits)
+        {
+            hits.Source.Id = hits.Id;
+        }
+        
+        return searchResponse.Documents.ToImmutableList();
     }
 }
