@@ -39,4 +39,11 @@ public class ProductRepository
         
         return searchResponse.Documents.ToImmutableList();
     }
+
+    public async Task<Product?> GetById(string id)
+    {
+        var response = await _client.GetAsync<Product>(id, x => x.Index("products"));
+        response.Source.Id = response.Id;
+        return response.Source;
+    }
 }

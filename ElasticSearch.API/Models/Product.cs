@@ -22,6 +22,6 @@ public class Product
         }
 
         return new ProductDto(Id, Name, Price, Created, Updated,
-            new ProductFeatureDto(Feature.Width, Feature.Height, Feature.Color));
+            new ProductFeatureDto(Feature.Width, Feature.Height, Feature.Color.ToString()));
     }
 }

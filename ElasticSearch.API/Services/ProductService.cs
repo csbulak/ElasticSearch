@@ -1,6 +1,7 @@
 using System.Net;
 using ElasticSearch.API.Dtos;
 using ElasticSearch.API.Repository;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ElasticSearch.API.Services;
 
@@ -31,5 +32,16 @@ public class ProductService
         var result = await _productRepository.GetAllAsync();
         var productListDto = result.Select(p => p.CreateDto()).ToList();
         return ResponseDto<List<ProductDto>>.Success(productListDto, HttpStatusCode.OK);
+    }
+
+    public async Task<ResponseDto<ProductDto>> GetById(string id)
+    {
+        var result = await _productRepository.GetById(id);
+        if (result is null)
+        {
+            return ResponseDto<ProductDto>.Fail("Product not found", HttpStatusCode.NotFound);
+        }
+        var productDto = result.CreateDto();
+        return ResponseDto<ProductDto>.Success(productDto, HttpStatusCode.OK);
     }
 }
