@@ -41,7 +41,16 @@ public class ProductService
         {
             return ResponseDto<ProductDto>.Fail("Product not found", HttpStatusCode.NotFound);
         }
+
         var productDto = result.CreateDto();
         return ResponseDto<ProductDto>.Success(productDto, HttpStatusCode.OK);
+    }
+
+    public async Task<ResponseDto<bool>> UpdateAsync(ProductUpdateDto product)
+    {
+        var success = await _productRepository.UpdateAsync(product);
+        return success
+            ? ResponseDto<bool>.Success(true, HttpStatusCode.OK)
+            : ResponseDto<bool>.Fail("Update operation failed", HttpStatusCode.InternalServerError);
     }
 }
