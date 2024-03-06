@@ -19,7 +19,7 @@ public class ProductRepository
         product.Created = DateTime.Now;
 
         var response = await _client.IndexAsync(product, x => x.Index("products").Id(Guid.NewGuid().ToString()));
-        if (!response.IsSuccess())
+        if (!response.IsValidResponse)
         {
             return null;
         }
@@ -35,7 +35,7 @@ public class ProductRepository
 
         foreach (var hits in searchResponse.Hits)
         {
-            hits.Source.Id = hits.Id;
+            if (hits.Source != null) hits.Source.Id = hits.Id;
         }
 
         return searchResponse.Documents.ToImmutableList();
@@ -44,7 +44,13 @@ public class ProductRepository
     public async Task<Product?> GetById(string id)
     {
         var response = await _client.GetAsync<Product>(id, x => x.Index("products"));
-        response.Source.Id = response.Id;
+
+        if (!response.Found)
+        {
+            return null;
+        }
+
+        if (response.Source != null) response.Source.Id = response.Id;
         return response.Source;
     }
 
@@ -52,12 +58,12 @@ public class ProductRepository
     {
         var response =
             await _client.UpdateAsync<Product, ProductUpdateDto>("products", product.Id, x => x.Doc(product));
-        return response.IsSuccess();
+        return response.IsValidResponse;
     }
 
     public async Task<bool> DeleteAsync(string id)
     {
         var response = await _client.DeleteAsync<Product>(id, x => x.Index("products"));
-        return response.IsSuccess();
+        return response.IsValidResponse;
     }
 }

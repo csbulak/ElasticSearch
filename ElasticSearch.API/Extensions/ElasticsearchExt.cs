@@ -14,5 +14,6 @@ public static class ElasticsearchExt
             .Authentication(new BasicAuthentication(username, password));
 
         var client = new ElasticsearchClient(settings);
+        services.AddSingleton(client);
     }
 }
