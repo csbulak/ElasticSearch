@@ -53,4 +53,12 @@ public class ProductService
             ? ResponseDto<bool>.Success(true, HttpStatusCode.OK)
             : ResponseDto<bool>.Fail("Update operation failed", HttpStatusCode.InternalServerError);
     }
+
+    public async Task<ResponseDto<bool>> DeleteAsync(string id)
+    {
+        return await _productRepository.DeleteAsync(id)
+            ? ResponseDto<bool>.Success(true, HttpStatusCode.NoContent)
+            : ResponseDto<bool>.Fail("Silinemedi", HttpStatusCode.InternalServerError);
+    }
+
 }

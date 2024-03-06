@@ -54,4 +54,10 @@ public class ProductRepository
             .Doc(product));
         return response.IsValid;
     }
+
+    public async Task<bool> DeleteAsync(string id)
+    {
+        var response = await _client.DeleteAsync<Product>(id, x => x.Index("products"));
+        return response.IsValid;
+    }
 }

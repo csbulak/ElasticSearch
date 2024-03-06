@@ -27,7 +27,7 @@ namespace ElasticSearch.API.Controllers
             return CreateActionResult(await _productService.GetAllAsync());
         }
         
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             return CreateActionResult(await _productService.GetById(id));
@@ -37,6 +37,11 @@ namespace ElasticSearch.API.Controllers
         public async Task<IActionResult> Update([FromBody] ProductUpdateDto productUpdateDto)
         {
             return CreateActionResult(await _productService.UpdateAsync(productUpdateDto));
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            return CreateActionResult(await _productService.DeleteAsync(id));
         }
     }
 }
