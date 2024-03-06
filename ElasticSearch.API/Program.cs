@@ -10,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddElastic(builder.Configuration);
 
-var app = builder.Build();
+var app = builder.Build(); 
 
 
 // Configure the HTTP request pipeline.
