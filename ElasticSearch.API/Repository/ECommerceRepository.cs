@@ -158,5 +158,36 @@ namespace ElasticSearch.API.Repository
 
             return result.Documents.ToImmutableList();
         }
+
+        public async Task<ImmutableList<ECommerce>> MatchAllPaginationQuery(int page, int pageSize)
+        {
+            if (page <= 0)
+                page = 1;
+
+            var pageFrom = (page - 1) * pageSize;
+
+            var result = await _client.SearchAsync<ECommerce>(s => s
+                .Index(indexName)
+                .From(pageFrom)
+                .Size(pageSize)
+                .Query(q => q.MatchAll()));
+
+            if (!result.IsValidResponse)
+            {
+                throw new Exception("Error occurred while executing the search query.");
+            }
+
+            if (result.Documents == null)
+            {
+                throw new Exception("No documents found.");
+            }
+
+            foreach (var hit in result.Hits)
+            {
+                if (hit.Source != null) hit.Source.Id = hit.Id;
+            }
+
+            return result.Documents.ToImmutableList();
+        }
     }
 }
