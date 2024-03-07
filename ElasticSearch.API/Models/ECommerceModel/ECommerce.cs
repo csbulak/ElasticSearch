@@ -20,6 +20,8 @@ namespace ElasticSearch.API.Models.ECommerceModel
         public DateTime OrderDate { get; set; }
         [JsonPropertyName("products")]
         public Product[] Products { get; set; } = null!;
+        [JsonPropertyName("taxful_total_price")]
+        public decimal TaxFullTotalPrice { get; set; }
     }
 
     public class Product

@@ -34,5 +34,11 @@ namespace ElasticSearch.API.Controllers
             var result = await _eCommerceRepository.PrefixQuery(customerFullName);
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RangeQuery(double fromPrice, double toPrice)
+        {
+            return Ok(await _eCommerceRepository.RangeQuery(fromPrice, toPrice));
+        }
     }
 }
