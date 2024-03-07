@@ -133,5 +133,30 @@ namespace ElasticSearch.API.Repository
 
             return result.Documents.ToImmutableList();
         }
+
+        public async Task<ImmutableList<ECommerce>> MatchAllQuery()
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s
+                .Index(indexName)
+                .Size(100)
+                .Query(q => q.MatchAll()));
+
+            if (!result.IsValidResponse)
+            {
+                throw new Exception("Error occurred while executing the search query.");
+            }
+
+            if (result.Documents == null)
+            {
+                throw new Exception("No documents found.");
+            }
+
+            foreach (var hit in result.Hits)
+            {
+                if (hit.Source != null) hit.Source.Id = hit.Id;
+            }
+
+            return result.Documents.ToImmutableList();
+        }
     }
 }

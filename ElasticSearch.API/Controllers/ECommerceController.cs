@@ -27,7 +27,7 @@ namespace ElasticSearch.API.Controllers
             var result = await _eCommerceRepository.TermsQuery(customerFirstName);
             return Ok(result);
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> PrefixQuery(string customerFullName)
         {
@@ -39,6 +39,12 @@ namespace ElasticSearch.API.Controllers
         public async Task<IActionResult> RangeQuery(double fromPrice, double toPrice)
         {
             return Ok(await _eCommerceRepository.RangeQuery(fromPrice, toPrice));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MatchAllQuery()
+        {
+            return Ok(await _eCommerceRepository.MatchAllQuery());
         }
     }
 }
