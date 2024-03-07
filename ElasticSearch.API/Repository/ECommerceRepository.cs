@@ -79,5 +79,31 @@ namespace ElasticSearch.API.Repository
 
             return result.Documents.ToImmutableList();
         }
+
+        public async Task<ImmutableList<ECommerce>> PrefixQuery(string customerFullName)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
+                .Query(q => q
+                    .Prefix(p => p
+                        .Field("customer_full_name.keyword")
+                        .Value(customerFullName))));
+
+            if (!result.IsValidResponse)
+            {
+                throw new Exception("Error occurred while executing the search query.");
+            }
+
+            if (result.Documents == null)
+            {
+                throw new Exception("No documents found.");
+            }
+
+            foreach (var hit in result.Hits)
+            {
+                if (hit.Source != null) hit.Source.Id = hit.Id;
+            }
+
+            return result.Documents.ToImmutableList();
+        }
     }
 }

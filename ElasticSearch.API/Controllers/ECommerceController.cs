@@ -27,5 +27,12 @@ namespace ElasticSearch.API.Controllers
             var result = await _eCommerceRepository.TermsQuery(customerFirstName);
             return Ok(result);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> PrefixQuery(string customerFullName)
+        {
+            var result = await _eCommerceRepository.PrefixQuery(customerFullName);
+            return Ok(result);
+        }
     }
 }
