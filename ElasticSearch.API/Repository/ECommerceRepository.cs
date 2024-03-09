@@ -20,7 +20,7 @@ namespace ElasticSearch.API.Repository
         private const string indexName = "kibana_sample_data_ecommerce";
 
         /// <summary>
-        /// Repository class for interacting with the ECommerce model in Elasticsearch.
+        /// Represents a repository for accessing ECommerce data in Elasticsearch.
         /// </summary>
         public ECommerceRepository(ElasticsearchClient client)
         {
@@ -139,7 +139,9 @@ namespace ElasticSearch.API.Repository
         /// </summary>
         /// <param name="fromPrice">The lower bound of the price range (inclusive).</param>
         /// <param name="toPrice">The upper bound of the price range (inclusive).</param>
-        /// <returns>A list of eCommerce objects with taxful total price within the specified range.</returns>
+        /// <returns>
+        /// A list of eCommerce objects with taxful total price within the specified range.
+        /// </returns>
         public async Task<ImmutableList<ECommerce>> RangeQuery(double? fromPrice, double? toPrice)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s
@@ -238,7 +240,9 @@ namespace ElasticSearch.API.Repository
         /// Perform a wildcard query to search for documents with a matching field value using wildcard patterns.
         /// </summary>
         /// <param name="customerFullName">The full name of the customer to search for.</param>
-        /// <returns>A list of ECommerce documents that match the given wildcard pattern on the CustomerFullName field.</returns>
+        /// <returns>
+        /// A list of <see cref="ECommerce"/> documents that match the given wildcard pattern on the CustomerFullName field.
+        /// </returns>
         public async Task<ImmutableList<ECommerce>> WildCardQuery(string customerFullName)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
@@ -405,9 +409,9 @@ namespace ElasticSearch.API.Repository
         /// <param name="cityName">The city name to search for.</param>
         /// <param name="taxFullTotalPrice">The maximum value for taxful total price.</param>
         /// <param name="categoryName">The category name to search for.</param>
-        /// <param name="menufacturer">The manufacturer name to search for.</param>
+        /// <param name="manufacturer">The manufacturer name to search for.</param>
         /// <returns>A list of ecommerce data that matches the search criteria.</returns>
-        public async Task<ImmutableList<ECommerce>> CompoundQueryExampleOne(string cityName, double taxFullTotalPrice, string categoryName, string menufacturer)
+        public async Task<ImmutableList<ECommerce>> CompoundQueryExampleOne(string cityName, double taxFullTotalPrice, string categoryName, string manufacturer)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
                 .Size(20)
@@ -429,7 +433,7 @@ namespace ElasticSearch.API.Repository
                         .Filter(f => f
                             .Term(t => t
                                 .Field("manufacturer.keyword")
-                                .Value(menufacturer))))));
+                                .Value(manufacturer))))));
 
             if (!result.IsValidResponse)
             {
@@ -449,6 +453,11 @@ namespace ElasticSearch.API.Repository
             return result.Documents.ToImmutableList();
         }
 
+        /// <summary>
+        /// Performs a compound query that checks for a match or prefix match on the customer's full name in the <see cref="ECommerce"/> documents.
+        /// </summary>
+        /// <param name="customerFullName">The full name of the customer to search for.</param>
+        /// <returns>An immutable list of <see cref="ECommerce"/> objects that match the query criteria.</returns>
         public async Task<ImmutableList<ECommerce>> CompoundQueryExampleTwo(string customerFullName)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
@@ -481,6 +490,11 @@ namespace ElasticSearch.API.Repository
             return result.Documents.ToImmutableList();
         }
 
+        /// <summary>
+        /// Performs a multi-match query on the "customer_first_name", "customer_last_name", and "customer_full_name" fields in the Elasticsearch index.
+        /// </summary>
+        /// <param name="name">The value to match against the fields.</param>
+        /// <returns>A list of ECommerce documents that match the query.</returns>
         public async Task<ImmutableList<ECommerce>> MultiMatchQuery(string name)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
