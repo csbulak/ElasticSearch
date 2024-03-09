@@ -157,16 +157,42 @@ namespace ElasticSearch.API.Controllers
             return Ok(await _eCommerceRepository.MatchPhraseQuery(customerFullName));
         }
 
+        /// <summary>
+        /// Performs a compound query example one with the specified parameters.
+        /// </summary>
+        /// <param name="cityName">The name of the city.</param>
+        /// <param name="taxFullTotalPrice">The maximum total price for tax calculation.</param>
+        /// <param name="categoryName">The name of the category.</param>
+        /// <param name="menufacturer">The name of the manufacturer.</param>
+        /// <returns>
+        /// A collection of ECommerce objects that match the compound query.
+        /// </returns>
         [HttpGet]
         public async Task<IActionResult> CompoundQueryExampleOne(string cityName, double taxFullTotalPrice, string categoryName, string menufacturer)
         {
             return Ok(await _eCommerceRepository.CompoundQueryExampleOne(cityName, taxFullTotalPrice, categoryName, menufacturer));
         }
 
+        /// <summary>
+        /// Retrieves a list of ECommerce objects based on a compound search query.
+        /// </summary>
+        /// <param name="customerFullName">The full name of the customer.</param>
+        /// <returns>A task representing the asynchronous operation. The task result contains an immutable list of ECommerce objects.</returns>
         [HttpGet]
         public async Task<IActionResult> CompoundQueryExampleTwo(string customerFullName)
         {
             return Ok(await _eCommerceRepository.CompoundQueryExampleTwo(customerFullName));
+        }
+
+        /// <summary>
+        /// Executes a multi-match query on the specified fields in the ECommerceRepository.
+        /// </summary>
+        /// <param name="name">The name to be matched in the fields "customer_first_name", "customer_last_name" and "customer_full_name".</param>
+        /// <returns>An ImmutableList of ECommerce objects matching the specified name in the specified fields.</returns>
+        [HttpGet]
+        public async Task<IActionResult> MultiMatchQuery(string name)
+        {
+            return Ok(await _eCommerceRepository.MultiMatchQuery(name));
         }
     }
 }
