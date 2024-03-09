@@ -224,7 +224,11 @@ namespace ElasticSearch.API.Repository
                     .Fuzzy(t => t
                         .Field(f => f.CustomerFirstName.Suffix("keyword"))
                         .Value(customerName)
-                        .Fuzziness(new Fuzziness(1)))));
+                        .Fuzziness(new Fuzziness(1))))
+                .Sort(sort => sort.Field(f => f.TaxFullTotalPrice, new FieldSort()
+                {
+                    Order = SortOrder.Desc
+                })));
 
             if (!result.IsValidResponse)
             {
