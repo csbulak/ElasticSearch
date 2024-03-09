@@ -162,5 +162,11 @@ namespace ElasticSearch.API.Controllers
         {
             return Ok(await _eCommerceRepository.CompoundQueryExampleOne(cityName, taxFullTotalPrice, categoryName, menufacturer));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CompoundQueryExampleTwo(string customerFullName)
+        {
+            return Ok(await _eCommerceRepository.CompoundQueryExampleTwo(customerFullName));
+        }
     }
 }
