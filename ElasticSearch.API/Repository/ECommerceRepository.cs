@@ -216,5 +216,32 @@ namespace ElasticSearch.API.Repository
 
             return result.Documents.ToImmutableList();
         }
+
+        public async Task<ImmutableList<ECommerce>> FuzzyQuery(string customerName)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s.Index(indexName)
+                .Query(q => q
+                    .Fuzzy(t => t
+                        .Field(f => f.CustomerFirstName.Suffix("keyword"))
+                        .Value(customerName)
+                        .Fuzziness(new Fuzziness(1)))));
+
+            if (!result.IsValidResponse)
+            {
+                throw new Exception("Error occurred while executing the search query.");
+            }
+
+            if (result.Documents == null)
+            {
+                throw new Exception("No documents found.");
+            }
+
+            foreach (var hit in result.Hits)
+            {
+                if (hit.Source != null) hit.Source.Id = hit.Id;
+            }
+
+            return result.Documents.ToImmutableList();
+        }
     }
 }
