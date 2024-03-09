@@ -76,5 +76,11 @@ namespace ElasticSearch.API.Controllers
         {
             return Ok(await _eCommerceRepository.MatchBoolPrefixQuery(customerFullName));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MatchPhraseQuery(string customerFullName)
+        {
+            return Ok(await _eCommerceRepository.MatchPhraseQuery(customerFullName));
+        }
     }
 }
