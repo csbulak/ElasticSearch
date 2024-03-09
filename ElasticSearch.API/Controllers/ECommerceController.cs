@@ -58,7 +58,7 @@ namespace ElasticSearch.API.Controllers
         {
             return Ok(await _eCommerceRepository.WildCardQuery(customerFullName));
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> FuzzyQuery(string customerName)
         {
@@ -69,6 +69,12 @@ namespace ElasticSearch.API.Controllers
         public async Task<IActionResult> MatchQueryFullText(string categoryName)
         {
             return Ok(await _eCommerceRepository.MatchQueryFullText(categoryName));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MatchBoolPrefixQuery(string customerFullName)
+        {
+            return Ok(await _eCommerceRepository.MatchBoolPrefixQuery(customerFullName));
         }
     }
 }
