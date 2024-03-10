@@ -1,0 +1,55 @@
+@{
+    ViewBag.Title = "Blog Search";
+    Layout = "_Layout";
+}
+
+@model List<Blog>
+
+<div class="container">
+    <div class="col-md-10 offset-md-1">
+        <form class="" asp-action="Search">
+            <div class="mb-3">
+                <label class="form-label">Search(Title, Content)</label>
+                <input name="searchText" class="form-control" value="@ViewBag.searchText"/>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="form-control">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-10 offset-md-1">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Tags</th>
+                <th>Created</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Any())
+            {
+                foreach (var blog in Model)
+                {
+                    <tr>
+                        <td>@blog.Id</td>
+                        <td>@blog.Title</td>
+                        <td>@blog.Content</td>
+                        <td>@String.Join(",", blog.Tags)</td>
+                        <td>@blog.Created.ToString("f")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr class="text-center">
+                    <td colspan="5">Veri Bulunamadı</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

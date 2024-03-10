@@ -34,5 +34,18 @@ namespace ElasticSearch.Web.Controllers
 
             return View(createViewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            return View(await blogService.SearchAsync(string.Empty));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string searchText)
+        {
+            ViewBag.searchText = searchText;
+            return View(await blogService.SearchAsync(searchText));
+        }
     }
 }
