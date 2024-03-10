@@ -1,0 +1,37 @@
+@{
+    ViewBag.Title = "Save";
+    Layout = "_Layout";
+}
+
+@model ElasticSearch.Web.ViewModel.BlogCreateViewModel
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        @if (TempData["result"] != null)
+        {
+            <div class="alert alert-info">
+                @TempData["result"]
+            </div>
+        }
+        <h2>Blog Create</h2>
+
+        <form asp-controller="Blog" asp-action="Save">
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input type="text" class="form-control" asp-for="Title"/>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label"></label>
+                <textarea class="form-control" asp-for="Content"></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Tags" class="form-label"></label>
+                <input type="text" class="form-control" asp-for="Tags"/>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="form-control">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

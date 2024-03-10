@@ -12,7 +12,7 @@ namespace ElasticSearch.Web.Services
             {
                 Title = createViewModel.Title,
                 Content = createViewModel.Content,
-                Tags = createViewModel.Tags.ToArray(),
+                Tags = createViewModel.Tags.Split(","),
                 UserId = Guid.NewGuid()
             };
 
