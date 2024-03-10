@@ -29,22 +29,15 @@ namespace ElasticSearch.Web.Repository
         {
             List<Action<QueryDescriptor<Blog>>> listQuery = [];
 
-            Action<QueryDescriptor<Blog>> matchAll = (q) => q.MatchAll();
-            Action<QueryDescriptor<Blog>> matchContent = (q) => q.Match(m => m
-                .Field(f => f.Content)
-                .Query(searchText));
-            Action<QueryDescriptor<Blog>> matchBoolPrefixTitle = (q) => q.MatchBoolPrefix(m => m
-                .Field(f => f.Content)
-                .Query(searchText));
-
             if (string.IsNullOrWhiteSpace(searchText))
             {
-                listQuery.Add(matchAll);
+                listQuery.Add(MatchAll);
             }
             else
             {
-                listQuery.Add(matchContent);
-                listQuery.Add(matchBoolPrefixTitle);
+                listQuery.Add(MatchContent);
+                listQuery.Add(MatchBoolPrefixTitle);
+                listQuery.Add(TagTerm);
             }
 
             var result = await client.SearchAsync<Blog>(s => s.Index(indexName)
@@ -68,6 +61,20 @@ namespace ElasticSearch.Web.Repository
             }
 
             return result.Documents.ToList();
+
+            void MatchAll(QueryDescriptor<Blog> q) => q.MatchAll();
+
+            void MatchContent(QueryDescriptor<Blog> q) =>
+                q.Match(m => m.Field(f => f.Content)
+                    .Query(searchText));
+
+            void MatchBoolPrefixTitle(QueryDescriptor<Blog> q) =>
+                q.MatchBoolPrefix(m => m.Field(f => f.Content)
+                    .Query(searchText));
+
+            void TagTerm(QueryDescriptor<Blog> q) =>
+                q.Term(m => m.Field(f => f.Tags)
+                    .Value(searchText));
         }
     }
 }
