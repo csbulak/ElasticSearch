@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticSearch.API", "ElasticSearch.API\ElasticSearch.API.csproj", "{14F710F1-8776-4316-9505-195354B0E58D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticSearch.Web", "ElasticSearch.Web\ElasticSearch.Web.csproj", "{3801848F-3462-4EC0-BBB0-C50B23D15E2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{14F710F1-8776-4316-9505-195354B0E58D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14F710F1-8776-4316-9505-195354B0E58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14F710F1-8776-4316-9505-195354B0E58D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3801848F-3462-4EC0-BBB0-C50B23D15E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3801848F-3462-4EC0-BBB0-C50B23D15E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3801848F-3462-4EC0-BBB0-C50B23D15E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3801848F-3462-4EC0-BBB0-C50B23D15E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
