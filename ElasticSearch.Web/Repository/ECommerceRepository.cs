@@ -9,9 +9,15 @@ namespace ElasticSearch.Web.Repository
     {
         private const string indexName = "kibana_sample_data_ecommerce";
 
-        public async Task<(List<ECommerce> list, long count)> SearchAsync(ECommerceSearchViewModel searchViewModel, int page, int pageSize)
+        public async Task<(List<ECommerce> list, long count)> SearchAsync(ECommerceSearchViewModel? searchViewModel, int page, int pageSize)
         {
             List<Action<QueryDescriptor<ECommerce>>> listQuery = [];
+
+            if (searchViewModel is null)
+            {
+                listQuery.Add((q) => q.MatchAll());
+                return await CalculateResultSet(page, pageSize, listQuery);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchViewModel.Category))
             {
@@ -27,7 +33,10 @@ namespace ElasticSearch.Web.Repository
                     .Query(searchViewModel.CustomerFullName)));
             }
 
-            if (searchViewModel.OrderDateStart.HasValue)
+            if (searchViewModel is
+                {
+                    OrderDateStart: not null
+                })
             {
                 listQuery.Add((q) => q
                     .Range(r => r
@@ -36,7 +45,10 @@ namespace ElasticSearch.Web.Repository
                             .Gte(searchViewModel.OrderDateStart.Value))));
             }
 
-            if (searchViewModel.OrderDateEnd.HasValue)
+            if (searchViewModel is
+                {
+                    OrderDateEnd: not null
+                })
             {
                 listQuery.Add((q) => q
                     .Range(r => r
@@ -49,9 +61,19 @@ namespace ElasticSearch.Web.Repository
             {
                 listQuery.Add((q) => q.Term(m => m
                     .Field(f => f.Gender)
-                    .Value(searchViewModel.Gender)));
+                    .Value(searchViewModel.Gender).CaseInsensitive()));
             }
 
+            if (listQuery.Count == 0)
+            {
+                listQuery.Add((q) => q.MatchAll());
+            }
+
+            return await CalculateResultSet(page, pageSize, listQuery);
+        }
+
+        private async Task<(List<ECommerce> list, long count)> CalculateResultSet(int page, int pageSize, List<Action<QueryDescriptor<ECommerce>>> listQuery)
+        {
             var pageFrom = (page - 1) * pageSize;
 
             var result = await client.SearchAsync<ECommerce>(s => s.Index(indexName)

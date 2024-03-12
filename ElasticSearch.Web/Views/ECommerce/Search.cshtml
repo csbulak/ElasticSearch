@@ -4,3 +4,76 @@
     ViewBag.Title = "ECommerce";
     Layout = "_Layout";
 }
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4">
+            <form asp-action="Search" method="get">
+                <div class="mb-3">
+                    <label asp-for="SearchViewModel.CustomerFullName" class="form-label"></label>
+                    <input asp-for="SearchViewModel.CustomerFullName" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SearchViewModel.Category" class="form-label"></label>
+                    <input asp-for="SearchViewModel.Category" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SearchViewModel.Gender" class="form-label"></label>
+                    <input asp-for="SearchViewModel.Gender" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SearchViewModel.OrderDateStart" class="form-label"></label>
+                    <input asp-for="SearchViewModel.OrderDateStart" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SearchViewModel.OrderDateEnd" class="form-label"></label>
+                    <input asp-for="SearchViewModel.OrderDateEnd" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <span>Toplam @Model.TotalCount bulunmuştur</span>
+            </div>
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Customer Full Name</th>
+                    <th>Order Date</th>
+                    <th>Gender</th>
+                    <th>TaxFull Total Price</th>
+                    <th>Category</th>
+                    <th>Order ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (Model.List.Any())
+                {
+                    foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.CustomerFullName</td>
+                            <td>@item.OrderDate</td>
+                            <td>@item.Gender</td>
+                            <td>@item.TaxFullTotalPrice</td>
+                            <td>@item.Category</td>
+                            <td>@item.OrderId</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">Kayıt Bulunamadı</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
