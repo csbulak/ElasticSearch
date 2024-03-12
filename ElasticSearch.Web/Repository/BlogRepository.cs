@@ -4,13 +4,19 @@ using ElasticSearch.Web.Models;
 
 namespace ElasticSearch.Web.Repository
 {
+    /// <summary>
+    /// Represents a repository for managing Blog entities.
+    /// </summary>
     public class BlogRepository(ElasticsearchClient client)
     {
-        /// <summary>
-        /// The name of the Elasticsearch index used by the ECommerceRepository class.
-        /// </summary>
+        /// used by the `BlogRepository` class.
         private const string indexName = "blog";
 
+        /// <summary>
+        /// Saves a blog asynchronously.
+        /// </summary>
+        /// <param name="blog">The blog object to save.</param>
+        /// <returns>A task representing the asynchronous save operation. The task will complete with a Blog object representing the saved blog if the save operation is successful, or null otherwise.</returns>
         public async Task<Blog?> SaveAsync(Blog blog)
         {
             blog.Created = DateTime.Now;
@@ -25,6 +31,11 @@ namespace ElasticSearch.Web.Repository
             return blog;
         }
 
+        /// <summary>
+        /// Searches for blogs matching the specified search text.
+        /// </summary>
+        /// <param name="searchText">The text to search for.</param>
+        /// <returns>A list of blogs that match the search text.</returns>
         public async Task<List<Blog>> SearchAsync(string searchText)
         {
             List<Action<QueryDescriptor<Blog>>> listQuery = [];

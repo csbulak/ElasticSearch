@@ -5,10 +5,26 @@ using ElasticSearch.Web.ViewModel;
 
 namespace ElasticSearch.Web.Repository
 {
+    /// <summary>
+    /// The ECommerceRepository class provides functionality to perform eCommerce search operations.
+    /// </summary>
     public class ECommerceRepository(ElasticsearchClient client)
     {
+        /// <summary>
+        /// Represents the name of the index in Elasticsearch for the eCommerce data.
+        /// </summary>
         private const string indexName = "kibana_sample_data_ecommerce";
 
+        /// <summary>
+        /// Performs a search for ECommerce objects asynchronously based on the provided search criteria.
+        /// </summary>
+        /// <param name="searchViewModel">The search criteria.</param>
+        /// <param name="page">The page number of the search results.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>
+        /// A tuple containing the list of ECommerce objects that match the search criteria,
+        /// the total count of matching items, and the number of page links generated.
+        /// </returns>
         public async Task<(List<ECommerce> list, long count)> SearchAsync(ECommerceSearchViewModel? searchViewModel, int page, int pageSize)
         {
             List<Action<QueryDescriptor<ECommerce>>> listQuery = [];
@@ -72,6 +88,15 @@ namespace ElasticSearch.Web.Repository
             return await CalculateResultSet(page, pageSize, listQuery);
         }
 
+        /// <summary>
+        /// Calculates the result set based on the given page, page size, and list of query actions.
+        /// </summary>
+        /// <param name="page">The page number.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="listQuery">The list of query actions.</param>
+        /// <returns>
+        /// A tuple containing the list of ECommerce objects and the total count of documents.
+        /// </returns>
         private async Task<(List<ECommerce> list, long count)> CalculateResultSet(int page, int pageSize, List<Action<QueryDescriptor<ECommerce>>> listQuery)
         {
             var pageFrom = (page - 1) * pageSize;
